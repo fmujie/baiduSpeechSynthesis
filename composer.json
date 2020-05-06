@@ -1,0 +1,17 @@
+{
+    "name": "fmujie/baiduSpeechSynthesis",
+    "description": "Baidu AI platform speech synthesis expansion package",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "fmujie",
+            "email": "fmujie182@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Fmujie\\BaiduSpeech\\": "src"
+        }
+    },
+    "require": {}
+}

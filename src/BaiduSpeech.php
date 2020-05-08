@@ -7,7 +7,7 @@ use Fmujie\BaiduSpeech\Libs\AipSpeech;
 
 /**
  * 百度语音SDK库
- * @package Jormin\BaiduSpeech
+ * @package Fmujie\BaiduSpeech
  */
 class BaiduSpeech{
 

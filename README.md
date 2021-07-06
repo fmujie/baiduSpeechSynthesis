@@ -43,7 +43,8 @@
 1. 语音合成
   
     ```php
-    Fmujie\BaiduSpeech\BaiduSpeech::combine($text, $userID, $lan, $speed, $pitch, $volume, $person);
+    $BaiduSpeech = new Fmujie\BaiduSpeech\BaiduSpeech();
+    $BaiduSpeech->combine($text, $userID, $lan, $speed, $pitch, $volume, $person);
     ```
     
     接口字段：
@@ -57,6 +58,7 @@
     | pitch | Integer | 音调，取值0-9，默认为5中语调 | Y |
     | volume | Integer | 音量，取值0-15，默认为5中音量 | Y |
     | person | Integer | 发音人选择, 0为女声，1为男声，3为情感合成-度逍遥，4为情感合成-度丫丫，默认为普通女 | Y |
+    | disk | String | 储存盘符选择默认'public' | Y |
     
     接口返回字段详细见 [百度官方文档](https://cloud.baidu.com/doc/SPEECH/TTS-Online-PHP-SDK.html).
     
@@ -83,8 +85,9 @@
             $pitch = 5;
             $volume = 5;
             $person = 4;
-            $data = BaiduSpeech::combine($text, $userID, $lan, $speed, $pitch, $volume, $person);
-            dd($data);
+            $BaiduSpeech = new BaiduSpeech();
+            $result = $BaiduSpeech->combine($text, $userID, $lan, $speed, $pitch, $volume, $person);
+            dd($result);
             return "";
         }
     }

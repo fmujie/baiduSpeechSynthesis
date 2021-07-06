@@ -11,6 +11,15 @@ use Fmujie\BaiduSpeech\Libs\AipSpeech;
  */
 class BaiduSpeech{
 
+    protected $statusCode = 200;
+    protected $returned = [
+        'result' => [
+            'code' => 0,
+            'status' => 'error',
+            'msg' => null
+            ]
+    ];
+    protected $disk = 'public';
     /**
      * @return array
      */
@@ -37,13 +46,8 @@ class BaiduSpeech{
      * @param $fileName string 存储文件路径名称
      * @return array
      */
-    public static function combine($text, $userID=null, $lan='zh', $speed=5, $pitch=5, $volume=5, $person=0, $fileName=null)
+    public function combine($text, $userID=null, $lan='zh', $speed=5, $pitch=5, $volume=5, $person=4, $fileName=null, $disk = 'public')
     {
-        $return = [
-            'code'=>0,
-            'status' => false,
-            'msg'=>'网络超时'
-        ];
         if(!$text){
             $return['msg'] = '缺少合成的文本';
             return $return;
@@ -78,17 +82,31 @@ class BaiduSpeech{
         }
         $response = $aipSpeech->synthesis($text, $lan, 1, $options);
         if(!is_array($response)){
-            $filePath = 'public/audios/back.mp3';
+            $fileName = date('Y_m_d').'/'.md5(time()) .mt_rand(0,9999).'.mp3';
+            Storage::disk($disk)->put($fileName, $response) ? $filePath = Storage::url($fileName) : $filePath = null;
+            if (!$filePath) {
+                $this->returned['result']['msg'] = '文件储存失败';
+                return $this->returned;
+            }
             Storage::put($filePath, $response);
-            $return = [
-                'code' => 1,
-                'status' => 'success',
-                'msg' => '语音合成成功',
-                'data' => $filePath
-            ];
+            $this->success('语音合成成功');
+            $this->returned['result']['file_path'] = $filePath;
         }else{
-            $return['msg'] = '语音合成错误,错误码:'.$response['error_code'].',错误信息:'.$response['error_msg'];
+            $this->returned['result']['msg'] = '语音合成错误,错误码:'.$response['error_code'].',错误信息:'.$response['error_msg'];
         }
-        return $return;
+        return $this->returned;
+    }
+
+    protected function success($successMsg, $statusCode = 200)
+    {
+        $this->returned['result']['code'] = 1;
+        $this->returned['result']['status'] = 'success';
+        $this->returned['result']['msg'] = $successMsg;
+        $this->statusCode = $statusCode;
+    }
+
+    protected function respond()
+    {
+        return response()->json($this->returned, $this->statusCode);
     }
 }

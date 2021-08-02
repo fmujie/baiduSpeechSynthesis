@@ -82,7 +82,7 @@ class BaiduSpeech{
         }
         $response = $aipSpeech->synthesis($text, $lan, 1, $options);
         if(!is_array($response)){
-            $fileName = date('Y_m_d').'/'.md5(time()) .mt_rand(0,9999).'.mp3';
+            $fileName = date('Y_m_d').'/' . 'audio_file/' . md5(time()) .mt_rand(0,9999).'.mp3';
             Storage::disk($disk)->put($fileName, $response) ? $filePath = Storage::url($fileName) : $filePath = null;
             if (!$filePath) {
                 $this->returned['result']['msg'] = '文件储存失败';
